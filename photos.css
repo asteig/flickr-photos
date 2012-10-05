@@ -1,7 +1,13 @@
 body {
     font: 16px/1 Helvetica, sans-serif;
+    background: #EFF2DE;
 }
 
+h1 {
+	color: #DF6794;
+	font-family: 'Arvo', serif;
+	font-weight: bold;
+}
 
 #photos {
     float: left;
@@ -13,10 +19,65 @@ body {
     margin: 0 2px 2px 0;
     overflow: hidden;
     height: 160px;
+    position: relative;
 }
 
-.photo,
+.photo {
+	margin: 0 auto;
+	width: 292px;
+	height: 160px;
+	background: #FFFFFF;
+	border: 5px #DDDBD9 solid;
+	margin: 5px;
+	-webkit-transition-property: background, border;
+	-webkit-transition-duration: 1s;
+	-webkit-transition-timing-function: ease;
+	-moz-transition: background 1s ease, border 1s ease;
+	-o-transition: background 1s ease, border 2s ease;
+	transition: background 1s ease, border 1s ease; 
+}
+
+.photo:hover {
+	background: url('images/framebg.png');
+	border: 5px #DF6794 solid;
+}
+
 .photo img {
     min-width: 160px;
     max-width: 240px;
+}
+
+.favorite {
+	font-size: 34px;
+	color: #A7DBD8;
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	text-decoration: none;
+}
+
+.favorite i.icon-heart-empty, .favorite i.icon-heart {
+	background-color: #666666;
+    border: 7px solid #666666;
+    border-radius: 35px 35px 35px 35px;
+    height: 26px;
+    margin-left: 25px;
+    -webkit-transition-property: background-color, border;
+	-webkit-transition-duration: 2s;
+	-webkit-transition-timing-function: ease;
+	-moz-transition: background-color 1s ease, border 1s ease, color 1s ease;
+	-o-transition: background-color 1s ease, border 1s ease, color 1s ease;
+	transition: background-color 1s ease, border 1s ease, color 1s ease; 
+}
+
+.favorite:hover i.icon-heart-empty, .favorite:hover i.icon-heart {
+	color: #666666;
+	background-color: #A7DBD8;
+    border: 7px solid #A7DBD8;
+    border-radius: 35px 35px 35px 35px;
+    cursor: pointer;
+}
+
+.favorite {
+	color: #A7DBD8;
 }

@@ -1,6 +1,7 @@
 /*global jQuery*/
 
 var setupPhotos = (function ($) {
+
     function each (items, callback) {
         var i;
         for (i = 0; i < items.length; i += 1) {
@@ -65,10 +66,71 @@ var setupPhotos = (function ($) {
         var holder = document.getElementById(id);
         return function (img) {
             var elm = document.createElement('div');
+            
             elm.className = 'photo';
+            
+            var fava = document.createElement('a'), favi = document.createElement('i');
+
+            fava.className = 'favorite';
+
+            if(checkFavorite(img)) {
+                favi.className = 'icon-heart';
+            }
+            else {
+                favi.className = 'icon-heart-empty';
+            }
+
+            fava.appendChild(favi);
+
             elm.appendChild(img);
             holder.appendChild(elm);
+            elm.appendChild(fava);
+
         };
+    }
+
+    function markFavorite(fav) {
+        
+        var favSrc, favSrcs;
+
+        favSrcs = [];
+
+        if(fav.className == 'icon-heart') {
+            fav.className = 'icon-heart-empty';
+        }
+        else {
+            fav.className = 'icon-heart';
+        }
+
+        if($('.icon-heart').length > 0) {
+            $('.icon-heart').each(function(i, el) {
+                favSrc = $(el).parent('a').prev('img').attr('src');
+                favSrcs.push(encodeURIComponent(favSrc));
+            });
+        }
+
+        document.cookie = 'user_favorites='+favSrcs.join(',');
+    }
+
+
+    function checkFavorite(img) {
+
+        var cookieData = document.cookie.split(':');
+        var galleryData = '';
+
+        $.each(cookieData, function(k,v) {
+            if(!galleryData && v.match(/^\s?user_favorites=/)) {
+                galleryData = decodeURIComponent(
+                    v.split('=').pop()
+                ).split(',');
+            };
+        });
+
+        if(jQuery.inArray($(img).attr('src'), galleryData) != -1) {
+            return true;
+        }
+
+        return false;
     }
 
     // ----
@@ -79,7 +141,13 @@ var setupPhotos = (function ($) {
             if (err) { return callback(err); }
 
             each(items.map(renderPhoto), imageAppender('photos'));
+
+            $(document).delegate('.favorite', 'click', function(ev) {
+                markFavorite(ev.target);
+            });
+
             callback();
+
         });
     };
 }(jQuery));
