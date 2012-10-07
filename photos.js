@@ -115,7 +115,7 @@ var setupPhotos = (function ($) {
 
     function checkFavorite(img) {
 
-        var cookieData = document.cookie.split(':');
+        var cookieData = document.cookie.split(';');
         var galleryData = '';
 
         $.each(cookieData, function(k,v) {
