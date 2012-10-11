@@ -2,6 +2,22 @@
 
 var setupPhotos = (function ($) {
 
+    var defaults, options;
+
+    defaults = {
+        tags: ['squirrel', 'cat'],
+        max_per_tag: 5,
+        holder: 'photos',
+        classes : {
+            favoriteWrapper : 'favorite',
+            favoriteActive : 'icon-heart',
+            favoriteInactive : 'icon-heart-empty',
+            photo : 'photo'
+        }
+    }
+
+    options = $.extend({}, defaults, options); 
+    
     function each (items, callback) {
         var i;
         for (i = 0; i < items.length; i += 1) {
@@ -16,6 +32,7 @@ var setupPhotos = (function ($) {
     }
 
     function loadPhotosByTag (tag, max, callback) {
+        
         var photos = [];
         var callback_name = 'callback_' + Math.floor(Math.random() * 100000);
 
@@ -62,22 +79,22 @@ var setupPhotos = (function ($) {
         return img;
     }
 
-    function imageAppender (id) {
-        var holder = document.getElementById(id);
+    function imageAppender () {
+        var holder = document.getElementById(options.holder);
         return function (img) {
             var elm = document.createElement('div');
             
-            elm.className = 'photo';
+            elm.className = options.classes.photo;
             
             var fava = document.createElement('a'), favi = document.createElement('i');
 
-            fava.className = 'favorite';
+            fava.className = options.classes.favoriteWrapper;
 
             if(checkFavorite(img)) {
-                favi.className = 'icon-heart';
+                favi.className = options.classes.favoriteActive;
             }
             else {
-                favi.className = 'icon-heart-empty';
+                favi.className = options.classes.favoriteInactive;
             }
 
             fava.appendChild(favi);
@@ -95,15 +112,15 @@ var setupPhotos = (function ($) {
 
         favSrcs = [];
 
-        if(fav.className == 'icon-heart') {
-            fav.className = 'icon-heart-empty';
+        if(fav.className == options.classes.favoriteActive) {
+            fav.className = options.classes.favoriteInactive;
         }
         else {
-            fav.className = 'icon-heart';
+            fav.className = options.classes.favoriteActive;
         }
 
-        if($('.icon-heart').length > 0) {
-            $('.icon-heart').each(function(i, el) {
+        if($('.'+options.classes.favoriteActive).length > 0) {
+            $('.'+options.classes.favoriteActive).each(function(i, el) {
                 favSrc = $(el).parent('a').prev('img').attr('src');
                 favSrcs.push(encodeURIComponent(favSrc));
             });
@@ -135,14 +152,16 @@ var setupPhotos = (function ($) {
 
     // ----
     
-    var max_per_tag = 5;
-    return function setup (tags, callback) {
-        loadAllPhotos(tags, max_per_tag, function (err, items) {
+    return function setup (settings, callback) {
+  
+        options = $.extend({}, defaults, settings);  
+       
+        loadAllPhotos(options.tags, options.max_per_tag, function (err, items) {
             if (err) { return callback(err); }
 
-            each(items.map(renderPhoto), imageAppender('photos'));
+            each(items.map(renderPhoto), imageAppender());
 
-            $(document).delegate('.favorite', 'click', function(ev) {
+            $(document).delegate('.'+options.classes.favoriteWrapper, 'click', function(ev) {
                 markFavorite(ev.target);
             });
 
